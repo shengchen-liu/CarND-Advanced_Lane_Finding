@@ -1,12 +1,14 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+from calibration_utils import calibrate_camera, undistort
+import glob
 import matplotlib.image as mpimg
 import pickle
-from threshold import combined_thresh
+from threshold import binarize
 
 
-def perspective_transform(img):
+def perspective_transform(img, verbose=False):
     """
     Execute perspective transform
     """
@@ -31,27 +33,37 @@ def perspective_transform(img):
     warped = cv2.warpPerspective(img, m, img_size, flags=cv2.INTER_LINEAR)
     unwarped = cv2.warpPerspective(warped, m_inv, (warped.shape[1], warped.shape[0]), flags=cv2.INTER_LINEAR)  # DEBUG
 
-    return warped, unwarped, m, m_inv
+    if verbose:
+        f, axarray = plt.subplots(1, 2)
+        f.set_facecolor('white')
+        axarray[0].set_title('Before perspective transform')
+        axarray[0].imshow(img, cmap='gray')
+        for point in src:
+            axarray[0].plot(*point, '.')
+        axarray[1].set_title('After perspective transform')
+        axarray[1].imshow(warped, cmap='gray')
+        for point in dst:
+            axarray[1].plot(*point, '.')
+        for axis in axarray:
+            axis.set_axis_off()
+        plt.show()
+
+    return warped, m, m_inv
+
 
 
 if __name__ == '__main__':
-    img_file = 'test_images/test2.jpg'
-
     with open('calibrate_camera.p', 'rb') as f:
         save_dict = pickle.load(f)
     mtx = save_dict['mtx']
     dist = save_dict['dist']
 
-    img = mpimg.imread(img_file)
-    img = cv2.undistort(img, mtx, dist, None, mtx)
+    # show result on test images
+    for test_img in glob.glob('test_images/*.jpg'):
+        img = cv2.imread(test_img)
 
-    img, abs_bin, mag_bin, dir_bin, hls_bin = combined_thresh(img)
+        img_undistorted = undistort(img, mtx, dist, verbose=False)
 
-    warped, unwarped, m, m_inv = perspective_transform(img)
+        img_binary = binarize(img_undistorted, verbose=False)
 
-    plt.imshow(warped, cmap='gray', vmin=0, vmax=1)
-    plt.savefig('test_images/warped_test2.png')
-    plt.show()
-
-    plt.imshow(unwarped, cmap='gray', vmin=0, vmax=1)
-    plt.show()
+        img_birdeye, M, Minv = perspective_transform(cv2.cvtColor(img_undistorted, cv2.COLOR_BGR2RGB), verbose=True)
