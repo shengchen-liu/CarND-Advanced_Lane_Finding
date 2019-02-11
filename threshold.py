@@ -8,6 +8,82 @@ import pickle
 yellow_HSV_th_min = np.array([0, 100, 100])
 yellow_HSV_th_max = np.array([50, 255, 255])
 
+def binarize_with_threshold(img, verbose=False):
+    # img: RGB
+    h, w = img.shape[:2]
+
+    binary = np.zeros(shape=(h, w), dtype=np.uint8)
+
+    # absolute value of gradient
+
+    abs_bin = abs_sobel_thresh(img, orient='x', thresh_min=50, thresh_max=255)
+
+    # magnitude of gradient
+    mag_bin = mag_thresh(img, sobel_kernel=3, mag_thresh=(50, 255))
+
+    # direction of the gradient
+    dir_bin = dir_threshold(img, sobel_kernel=15, thresh=(0.7, 1.3))
+
+    # Convert RGB to HLS and threshold to binary image using S channel
+    hls_bin = hls_thresh(img, thresh=(170, 255))
+
+    # highlight white lines by thresholding the equalized frame
+    eq_white_mask = get_binary_from_equalized_grayscale(img, verbose=False)
+
+    # highlight yellow lines by threshold in HSV color space
+    HSV_yellow_mask = hsv_thresh(img, yellow_HSV_th_min, yellow_HSV_th_max, verbose=False)
+    binary[HSV_yellow_mask]=1
+
+    combined = np.zeros_like(dir_bin)
+    combined[(abs_bin == 1 | ((mag_bin == 1) & (dir_bin == 1))) | ((eq_white_mask == 1) | (binary == 1)) ] = 1
+
+    # combined[(abs_bin == 1 | ((mag_bin == 1) & (dir_bin == 1))) | eq_white_mask == 1] = 1
+
+    # apply a light morphology to "fill the gaps" in the binary image
+    kernel = np.ones((5, 5), np.uint8)
+    closing = cv2.morphologyEx(combined.astype(np.uint8), cv2.MORPH_CLOSE, kernel)
+
+    # return combined, abs_bin, mag_bin, dir_bin, hls_bin  # DEBUG
+    if verbose:
+        f, ax = plt.subplots(2, 4)
+        f.set_facecolor('white')
+        ax[0, 0].imshow(img)
+        ax[0, 0].set_title('input_frame')
+        ax[0, 0].set_axis_off()
+        # ax[0, 0].set_axis_bgcolor('red')
+        ax[0, 1].imshow(abs_bin, cmap='gray')
+        ax[0, 1].set_title('abs_bin')
+        ax[0, 1].set_axis_off()
+
+        ax[0, 2].imshow(mag_bin, cmap='gray')
+        ax[0, 2].set_title('mag_bin ')
+        ax[0, 2].set_axis_off()
+
+        ax[0, 3].imshow(dir_bin, cmap='gray')
+        ax[0, 3].set_title('dir_bin')
+        ax[0, 3].set_axis_off()
+
+        ax[1, 0].imshow(eq_white_mask, cmap='gray')
+        ax[1, 0].set_title('eq_white_mask')
+        ax[1, 0].set_axis_off()
+
+        ax[1, 1].imshow(HSV_yellow_mask, cmap='gray')
+        ax[1, 1].set_title('HSV_yellow_mask')
+        ax[1, 1].set_axis_off()
+
+        ax[1, 2].imshow(combined, cmap='gray')
+        ax[1, 2].set_title('before closure')
+        ax[1, 2].set_axis_off()
+
+        ax[1, 3].imshow(closing, cmap='gray')
+        ax[1, 3].set_title('after closure')
+        ax[1, 3].set_axis_off()
+
+
+        plt.show()
+
+    return closing
+
 def thresh_frame_sobel(frame, kernel_size):
     """
     Apply Sobel edge detection to an input frame, then threshold the result
@@ -117,75 +193,7 @@ def hsv_thresh(img, th_min, th_max, verbose=False):
 
     return out
 
-def binarize_with_threshold(img, verbose=False):
-    # img: RGB
-    h, w = img.shape[:2]
 
-    binary = np.zeros(shape=(h, w), dtype=np.uint8)
-
-    # absolute value of gradient
-
-    abs_bin = abs_sobel_thresh(img, orient='x', thresh_min=50, thresh_max=255)
-
-    # magnitude of gradient
-    mag_bin = mag_thresh(img, sobel_kernel=3, mag_thresh=(50, 255))
-
-    # direction of the gradient
-    dir_bin = dir_threshold(img, sobel_kernel=15, thresh=(0.7, 1.3))
-
-    # Convert RGB to HLS and threshold to binary image using S channel
-    hls_bin = hls_thresh(img, thresh=(170, 255))
-
-    # highlight white lines by thresholding the equalized frame
-    eq_white_mask = get_binary_from_equalized_grayscale(img, verbose=False)
-
-    # highlight yellow lines by threshold in HSV color space
-    HSV_yellow_mask = hsv_thresh(img, yellow_HSV_th_min, yellow_HSV_th_max, verbose=False)
-    binary[HSV_yellow_mask]=1
-
-    combined = np.zeros_like(dir_bin)
-    combined[(abs_bin == 1 | ((mag_bin == 1) & (dir_bin == 1))) | ((eq_white_mask == 1) | (binary == 1)) ] = 1
-
-    # combined[(abs_bin == 1 | ((mag_bin == 1) & (dir_bin == 1))) | eq_white_mask == 1] = 1
-
-    # apply a light morphology to "fill the gaps" in the binary image
-    kernel = np.ones((5, 5), np.uint8)
-    closing = cv2.morphologyEx(combined.astype(np.uint8), cv2.MORPH_CLOSE, kernel)
-
-    # return combined, abs_bin, mag_bin, dir_bin, hls_bin  # DEBUG
-    if verbose:
-        f, ax = plt.subplots(3, 3)
-        f.set_facecolor('white')
-        ax[0, 0].imshow(img)
-        ax[0, 0].set_title('input_frame')
-        ax[0, 0].set_axis_off()
-        # ax[0, 0].set_axis_bgcolor('red')
-        ax[0, 1].imshow(abs_bin, cmap='gray')
-        ax[0, 1].set_title('abs_bin')
-        ax[0, 1].set_axis_off()
-
-        ax[0, 2].imshow(mag_bin, cmap='gray')
-        ax[0, 2].set_title('mag_bin ')
-        ax[0, 2].set_axis_off()
-
-        ax[1, 0].imshow(dir_bin, cmap='gray')
-        ax[1, 0].set_title('dir_bin')
-        ax[1, 0].set_axis_off()
-
-        ax[1, 1].imshow(eq_white_mask, cmap='gray')
-        ax[1, 1].set_title('eq_white_mask')
-        ax[1, 1].set_axis_off()
-
-        ax[1, 2].imshow(closing, cmap='gray')
-        ax[1, 2].set_title('after closure')
-        ax[1, 2].set_axis_off()
-
-        ax[2, 0].imshow(HSV_yellow_mask, cmap='gray')
-        ax[2, 0].set_title('HSV_yellow_mask')
-        ax[2, 0].set_axis_off()
-        plt.show()
-
-    return closing
 
 def get_binary_from_equalized_grayscale(frame, verbose):
     """
@@ -196,12 +204,14 @@ def get_binary_from_equalized_grayscale(frame, verbose):
     eq_global = cv2.equalizeHist(gray)
 
     _, th = cv2.threshold(eq_global, thresh=250, maxval=255, type=cv2.THRESH_BINARY)
+    binary_output = np.zeros_like(gray)
+    binary_output[th > 0 ] = 1
 
     if verbose:
-        plt.imshow(th, cmap='gray')
+        plt.imshow(binary_output, cmap='gray')
         plt.show()
 
-    return th
+    return binary_output
 
 
 def binarize(img, verbose=False):
@@ -265,15 +275,15 @@ def binarize(img, verbose=False):
 
 
 if __name__ == '__main__':
-    img_file = 'test_images/straight_lines1.jpg'
     img_file = 'test_images/test5.jpg'
-
-    # with open('calibrate_camera.p', 'rb') as f:
-    #     save_dict = pickle.load(f)
-    # mtx = save_dict['mtx']
-    # dist = save_dict['dist']
-    #
-    # img = mpimg.imread(img_file)
-    # img = cv2.undistort(img, mtx, dist, None, mtx)
     img = cv2.imread(img_file)
-    closing = binarize(img, verbose=True)
+
+    with open('calibrate_camera.p', 'rb') as f:
+        save_dict = pickle.load(f)
+    mtx = save_dict['mtx']
+    dist = save_dict['dist']
+
+    img = mpimg.imread(img_file)
+    img = cv2.undistort(img, mtx, dist, None, mtx)
+
+    closing = binarize_with_threshold(img, verbose=True)

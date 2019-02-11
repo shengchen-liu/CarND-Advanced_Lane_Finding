@@ -212,11 +212,13 @@ def get_fits_by_sliding_windows(birdeye_binary, line_lt, line_rt, n_windows=9, v
         f, ax = plt.subplots(1, 2)
         f.set_facecolor('white')
         ax[0].imshow(birdeye_binary, cmap='gray')
+        ax[0].set_title("Original image")
         ax[1].imshow(out_img)
         ax[1].plot(left_fitx, ploty, color='yellow')
         ax[1].plot(right_fitx, ploty, color='yellow')
         ax[1].set_xlim(0, 1280)
         ax[1].set_ylim(720, 0)
+        ax[1].set_title("After curve fitting")
 
         plt.show()
 

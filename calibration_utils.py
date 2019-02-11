@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import pickle
 import glob
+import os
 from os import getcwd, chdir
 
 # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
@@ -78,12 +79,32 @@ def undistort(frame, mtx, dist, verbose=False):
     if verbose:
         fig, ax = plt.subplots(nrows=1, ncols=2)
         ax[0].imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        ax[0].set_title('Original image')
         ax[1].imshow(cv2.cvtColor(frame_undistorted, cv2.COLOR_BGR2RGB))
+        ax[1].set_title('Undistorted image')
         plt.show()
 
-    save_dict = {'mtx': mtx, 'dist': dist}
-    with open('calibrate_camera.p', 'wb') as f:
-        pickle.dump(save_dict, f)
+    if not os.path.exists('calibrate_camera.p'):
+        save_dict = {'mtx': mtx, 'dist': dist}
+        with open('calibrate_camera.p', 'wb') as f:
+            pickle.dump(save_dict, f)
 
     return frame_undistorted
+
+if __name__ == '__main__':
+    if not os.path.exists('calibrate_camera.p'):
+        ret, mtx, dist, rvecs, tvecs = calibrate_camera(calib_images_dir='camera_cal')
+    with open('calibrate_camera.p', 'rb') as f:
+        save_dict = pickle.load(f)
+    mtx = save_dict['mtx']
+    dist = save_dict['dist']
+
+    # img = cv2.imread('camera_cal/calibration1.jpg')
+    # undistorted = undistort(img, mtx, dist, verbose=True)
+
+    img = cv2.imread('test_images/test2.jpg')
+    undistorted = undistort(img, mtx, dist, verbose=True)
+    cv2.imwrite("output_images/test2_undistorted.png", undistorted)
+
+
 

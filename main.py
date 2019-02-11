@@ -82,5 +82,15 @@ if __name__ == '__main__':
     if mode == "VIDEO":
         video_output = 'test_videos_output/{}'.format(file_name)
         process_video(file_name, video_output)
+    elif mode == "IMAGE":
+        test_img_dir = 'test_images'
+        for test_img in os.listdir(test_img_dir):
+            frame = cv2.imread(os.path.join(test_img_dir, test_img))
 
+            blend = process_pipeline(frame, keep_state=False)
+
+            cv2.imwrite('output_images/{}'.format(test_img), blend)
+
+            plt.imshow(cv2.cvtColor(blend, code=cv2.COLOR_BGR2RGB))
+            plt.show()
 
