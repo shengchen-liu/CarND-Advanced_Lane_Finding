@@ -65,6 +65,7 @@ def process_video(input_file, output_file):
     annotated_video.write_videofile(output_file, audio=False)
 
 if __name__ == '__main__':
+    # step1: calibrate camera
     if not os.path.exists('calibrate_camera.p'):
         ret, mtx, dist, rvecs, tvecs = calibrate_camera(calib_images_dir='camera_cal')
     with open('calibrate_camera.p', 'rb') as f:
