@@ -3,8 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="52f6ae08-be54-4b06-8a86-94fda03bbda9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calibrate_camera.p" beforeDir="false" afterPath="$PROJECT_DIR$/calibrate_camera.p" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibrate_camera.p" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/calibration_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/calibration_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/threshold.py" beforeDir="false" afterPath="$PROJECT_DIR$/threshold.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualization.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +55,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.calibration_utils">
+  <component name="RunManager" selected="Python.line_utils">
     <configuration name="calibration_utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CarND-Advanced-Lane-Lines" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -171,11 +175,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.calibration_utils" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.line_utils" />
         <item itemvalue="Python.perspective_transform" />
         <item itemvalue="Python.threshold" />
+        <item itemvalue="Python.calibration_utils" />
+        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -189,7 +193,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1549517392529</updated>
-      <workItem from="1577057565481" duration="1568000" />
+      <workItem from="1577057565481" duration="3879000" />
     </task>
     <servers />
   </component>
@@ -232,19 +236,22 @@
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>50</line>
-          <option name="timeStamp" value="19" />
+          <url>file://$PROJECT_DIR$/calibration_utils.py</url>
+          <line>111</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/calibration_utils.py</url>
-          <line>107</line>
-          <option name="timeStamp" value="21" />
+          <url>file://$PROJECT_DIR$/perspective_transform.py</url>
+          <line>18</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CarND_Advanced_Lane_Finding$calibration_utils.coverage" NAME="calibration_utils Coverage Results" MODIFIED="1577059170819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CarND_Advanced_Lane_Finding$threshold.coverage" NAME="threshold Coverage Results" MODIFIED="1577060832504" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CarND_Advanced_Lane_Finding$calibration_utils.coverage" NAME="calibration_utils Coverage Results" MODIFIED="1577060059895" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CarND_Advanced_Lane_Finding$perspective_transform.coverage" NAME="perspective_transform Coverage Results" MODIFIED="1577061134166" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CarND_Advanced_Lane_Finding$line_utils.coverage" NAME="line_utils Coverage Results" MODIFIED="1577061256561" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

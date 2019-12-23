@@ -112,6 +112,7 @@ def final_viz(img_undistorted, Minv, line_lt, line_rt, keep_state):
     left_fitx = left_fit[0] * ploty ** 2 + left_fit[1] * ploty + left_fit[2]
     right_fitx = right_fit[0] * ploty ** 2 + right_fit[1] * ploty + right_fit[2]
 
+    # TODO 10: draw road
     # draw road as green polygon on original frame
     road_warp = np.zeros_like(img_undistorted, dtype=np.uint8)
     pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])

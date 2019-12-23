@@ -15,7 +15,7 @@ def binarize_with_threshold(img, verbose=False):
     binary = np.zeros(shape=(h, w), dtype=np.uint8)
 
     # absolute value of gradient
-
+    # TODO 6: Abs_bin
     abs_bin = abs_sobel_thresh(img, orient='x', thresh_min=50, thresh_max=255)
 
     # magnitude of gradient

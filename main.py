@@ -27,16 +27,24 @@ def process_pipeline(frame, keep_state=True):
 
     global line_lt, line_rt, processed_frames
 
+    #  step 2
+    # TODO 4: call undistort funcction and pass it to img_undistorted
     # undistort the image using coefficients found in calibration
     img_undistorted = undistort(frame, mtx, dist, verbose=False)
 
+    # step 3
     # binarize the frame s.t. lane lines are highlighted as much as possible
     # img_binary = binarize(img_undistorted, verbose=False)
+    #  TODO 5: Binarize
     img_binary = binarize_with_threshold(img_undistorted, verbose=False)
 
-    #  perspective transform
+    # step 4
+    # TODO 6: Perspetive transform
+    # perspective transform
     binary_warped, m, m_inv = perspective_transform(img_binary, verbose=False)
 
+    # step 5
+    # TODO 7: Curve fitting
     # fit 2-degree polynomial curve onto lane lines found
     if processed_frames > 0 and keep_state and line_lt.detected and line_rt.detected:
         # Fast line fit
@@ -44,12 +52,18 @@ def process_pipeline(frame, keep_state=True):
     else:
         line_lt, line_rt, img_fit = get_fits_by_sliding_windows(binary_warped, line_lt, line_rt, n_windows=9, verbose=False)
 
+    # step 6
+    # TODO 8: Compute offset
     # compute offset in meter from center of the lane
     offset_meter = compute_offset_from_center(line_lt, line_rt, frame_width=frame.shape[1])
 
+    # step 7
+    # TODO 9: Final visualization
     # Perform final visualization on top of original undistorted image
     result = final_viz(img_undistorted, m_inv, line_lt, line_rt, keep_state)
 
+    # step 8
+    # TODO 11: Blending
     # stitch on the top of final output images from different steps of the pipeline
     blend_output = prepare_out_blend_frame(result, img_binary, binary_warped, img_fit, line_lt, line_rt, offset_meter)
 
@@ -66,6 +80,7 @@ def process_video(input_file, output_file):
 
 if __name__ == '__main__':
     # step1: calibrate camera
+    # Complete: 1 Calibrate camera
     if not os.path.exists('calibrate_camera.p'):
         ret, mtx, dist, rvecs, tvecs = calibrate_camera(calib_images_dir='camera_cal')
     with open('calibrate_camera.p', 'rb') as f:
@@ -73,6 +88,7 @@ if __name__ == '__main__':
     mtx = save_dict['mtx']
     dist = save_dict['dist']
 
+    # Parsing argument
     parser = argparse.ArgumentParser()
     parser.add_argument("--MODE", help="IMAGE OR VIDEO", type=str)
     parser.add_argument("--FILE_NAME", help="NAME OF FILE FOR TEST", type=str)
@@ -88,6 +104,7 @@ if __name__ == '__main__':
         for test_img in os.listdir(test_img_dir):
             frame = cv2.imread(os.path.join(test_img_dir, test_img))
 
+            # Add comment here
             blend = process_pipeline(frame, keep_state=False)
 
             cv2.imwrite('output_images/{}'.format(test_img), blend)

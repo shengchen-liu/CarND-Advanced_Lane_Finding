@@ -22,6 +22,9 @@ def calibrate_camera(calib_images_dir, verbose=False):
     # Everything is (9,6) for now
 
     # List of object points and corners for calibration
+    # TODO: 2 Create 2 lists for objpoints and imgpoints
+    # example: A_list = []
+
     objpoints = [] # 3d points in real world
     imgpoints = []  # 2d points in image plane
 
@@ -31,6 +34,7 @@ def calibrate_camera(calib_images_dir, verbose=False):
 
     # Go through all images and find corners
     for idx, fname in enumerate(images):
+        # TODO: 3 Read image
         img = cv2.imread(fname)
         # Convert to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
