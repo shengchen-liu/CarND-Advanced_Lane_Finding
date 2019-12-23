@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="52f6ae08-be54-4b06-8a86-94fda03bbda9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calibrate_camera.p" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/calibration_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/calibration_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/threshold.py" beforeDir="false" afterPath="$PROJECT_DIR$/threshold.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualization.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -193,7 +187,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1549517392529</updated>
-      <workItem from="1577057565481" duration="3879000" />
+      <workItem from="1577057565481" duration="4963000" />
     </task>
     <servers />
   </component>
