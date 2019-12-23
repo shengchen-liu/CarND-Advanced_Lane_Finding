@@ -11,7 +11,7 @@ from os import getcwd, chdir
 objp = np.zeros((6*9,3), np.float32)
 objp[:,:2] = np.mgrid[0:9, 0:6].T.reshape(-1,2)
 
-def calibrate_camera(verbose=False):
+def calibrate_camera(calib_images_dir, verbose=False):
     '''
 
     :param sample: whether draw and display results
@@ -27,7 +27,7 @@ def calibrate_camera(verbose=False):
 
     # Make a list of calibration images
 
-    images = glob.glob('camera_cal/*.jpg')
+    images = glob.glob(calib_images_dir + '/*.jpg')
 
     # Go through all images and find corners
     for idx, fname in enumerate(images):
@@ -63,7 +63,19 @@ def calibrate_camera(verbose=False):
     # Do camera calibration given object points and image points
     ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, img_size,None,None)
 
-    return ret, mtx, dist
+    # save as pickle
+    result_dict = {}
+    result_dict['mtx'] = mtx
+    result_dict['dist'] = dist
+
+    # Its important to use binary mode
+    dbfile = open('calibrate_camera.p', 'ab')
+
+    # source, destination
+    pickle.dump(result_dict, dbfile)
+    dbfile.close()
+
+    return ret, mtx, dist, rvecs, tvecs
 
 def undistort(frame, mtx, dist, verbose=False):
     """
@@ -93,7 +105,7 @@ def undistort(frame, mtx, dist, verbose=False):
 
 if __name__ == '__main__':
     if not os.path.exists('calibrate_camera.p'):
-        ret, mtx, dist, rvecs, tvecs = calibrate_camera(calib_images_dir='camera_cal')
+        ret, mtx, dist, rvecs, tvecs = calibrate_camera(calib_images_dir='camera_cal', verbose=True)
     with open('calibrate_camera.p', 'rb') as f:
         save_dict = pickle.load(f)
     mtx = save_dict['mtx']
